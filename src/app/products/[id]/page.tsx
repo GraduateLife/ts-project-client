@@ -4,17 +4,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/theme/ui/tabs';
 
 import ProductIntroduction from '@/components/productDetail/productIntroduction';
 import Spacer from '@/theme/typography/spacer';
-import CommentList from '@/components/commentList';
-import { createOneProduct } from '@/mock/product.mock';
+import CommentList from '@/components/comment/commentList';
 import {
   GetServerSideProps,
   GetStaticProps,
   Metadata,
   ResolvingMetadata,
 } from 'next';
-import { Product } from '@/models/product';
 import ProductDetailDisplay from '@/components/productDetail/productDetailDisplay';
 import { _fetch } from '@/fetchers';
+import SkipSSR from '@/theme/ui/SkipSSR';
 
 type ProductDetailProps = {
   params: { id: string };

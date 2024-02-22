@@ -1,6 +1,5 @@
 import { PaginateMetadata, RData, _fetch } from '@/fetchers';
-import { fetchProducts } from '@/fetchers/products';
-import { Product } from '@/models/product';
+
 import { useEffect, useState } from 'react';
 
 export const useInfiniteScroll = <T>(

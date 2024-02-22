@@ -8,12 +8,11 @@ type AvatarProp = {
 
 //FIXME remember username can be preset by backends (starting with user_)
 const takeStringShortcut = (input: string) => {
-  let prepared: string | string[] = input;
   if (input.includes(' ')) {
-    prepared = input.split(' ');
-    return (prepared[0][0] + prepared[1][0]).toUpperCase();
+    const _input = input.split(' ');
+    return (_input[0][0] + _input[1][0]).toUpperCase();
   }
-  return (prepared[0] + prepared[1]).toUpperCase();
+  return (input[0] + input[1]).toUpperCase();
 };
 
 const BaseAvatar = ({ userName, avatarUrl, ...rest }: AvatarProp) => {
