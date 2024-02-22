@@ -4,35 +4,28 @@ import { useUserActivity } from '@/hooks/store/namespaces/userActivity';
 import { useStore } from 'zustand';
 import { Button } from '@/theme/ui/button';
 
-import { CalendarDays } from 'lucide-react';
+import { CalendarDays, LogOut } from 'lucide-react';
 import {
   HoverCardTrigger,
   HoverCard,
   HoverCardContent,
 } from '@/theme/ui/hover-card';
-import Link from 'next/link';
-import dynamic from 'next/dynamic';
-
-const UserAvatar = () => {
-  const UserActivityNS = useStore(useUserActivity);
-  const handleNavigation = () => {};
-  return (
-    <BaseAvatar
-      userName={UserActivityNS.recorded.accountId}
-      avatarUrl={UserActivityNS.recorded.avatarCode}
-      className="cursor-pointer"
-    ></BaseAvatar>
-  );
-};
 
 const UserAvatarCard = () => {
   const UserActivityNS = useStore(useUserActivity);
+  const handleLogOut = () => {
+    UserActivityNS.setLogin(false);
+  };
   return (
     <HoverCard>
       <HoverCardTrigger>
-        <UserAvatar></UserAvatar>
+        <BaseAvatar
+          userName={UserActivityNS.recorded.accountId}
+          avatarUrl={UserActivityNS.recorded.avatarCode}
+          className="cursor-pointer"
+        ></BaseAvatar>
       </HoverCardTrigger>
-      <HoverCardContent className="w-80 space-y-4">
+      <HoverCardContent className="flex justify-between w-80">
         <div className="flex justify-between space-x-4">
           <div className="space-y-1">
             <h4 className="text-sm font-semibold">
@@ -46,6 +39,10 @@ const UserAvatarCard = () => {
             </div>
           </div>
         </div>
+        <LogOut
+          className="text-orange-400 cursor-pointer h-full"
+          onClick={handleLogOut}
+        />
       </HoverCardContent>
     </HoverCard>
   );

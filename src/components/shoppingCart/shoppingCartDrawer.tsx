@@ -19,24 +19,34 @@ import { useStore } from 'zustand';
 import { useCartListStore } from '@/hooks/store/namespaces/cartList';
 import { useUserActivity } from '@/hooks/store/namespaces/userActivity';
 import { useRouter } from 'next/navigation';
+import { prepareStripeClient } from '@/lib/stripe';
+import { _fetch } from '@/fetchers';
 
 const ShoppingCartDrawer = () => {
   const CartListNS = useStore(useCartListStore);
   const UserActivityNS = useStore(useUserActivity);
   const router = useRouter();
-  const handlePay = () => {
-    if (!UserActivityNS.recorded.isLoggedIn) {
-      router.push('/login');
-      return;
-    }
-    router.push('/payment');
-    return;
+  const handlePay = async () => {
+    // router.push('/payment');
+    // return;
+    const stripe = await prepareStripeClient();
+    const res = await fetch('/api/checkout', {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      body: JSON.stringify(CartListNS.cartItems),
+    });
+    const { sessionId } = await res.json();
+    stripe && stripe.redirectToCheckout({ sessionId });
   };
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Button variant={'ghost'} className="relative">
-          <Dot position="absolute top-0 right-0"></Dot>
+          {CartListNS.cartItems.length > 0 && (
+            <p className="text-orange-400 absolute top-0 right-0">
+              {CartListNS.cartItems.length}
+            </p>
+          )}
           <ShoppingCart className="text-primary" />
         </Button>
       </SheetTrigger>
@@ -55,7 +65,11 @@ const ShoppingCartDrawer = () => {
         <ShoppingCartList />
         <SheetFooter>
           <div className=" w-[80%] mx-auto flex justify-between items-center">
-            <Button type="submit" onClick={handlePay}>
+            <Button
+              type="submit"
+              onClick={handlePay}
+              disabled={CartListNS.cartItems.length === 0}
+            >
               Pay
             </Button>
             <SheetClose asChild>

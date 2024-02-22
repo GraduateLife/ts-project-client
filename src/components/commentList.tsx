@@ -1,6 +1,6 @@
 import React from 'react';
 import BaseAvatar from './base/baseAvatar';
-import { ipsumUrl } from '@/mock/constants';
+import { picsumUrl } from '@/mock/constants';
 import Title from '@/theme/typography/title';
 import { CardDescription } from '@/theme/ui/card';
 import Words from '@/theme/typography/words';
@@ -41,7 +41,7 @@ const CommentList = () => {
   return (
     <div className="w-full">
       <CommentLi
-        userProfileUrl={ipsumUrl(25)}
+        userProfileUrl={picsumUrl(25)}
         userName={'vewvwv'}
         userRate={4}
         publishedAt={new Date().toLocaleString()}

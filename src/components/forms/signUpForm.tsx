@@ -1,8 +1,8 @@
 'use client';
-import BaseForm from '@/components/base/baseForm';
+import BaseForm from '@/components/forms/base/baseForm';
 import React, { useState } from 'react';
 import * as z from 'zod';
-import BaseFileUploader, { Uploadable } from '../base/baseFileUploader';
+import BaseFileUploader, { Uploadable } from './base/baseFileUploader';
 import { useReactive } from '@/hooks/useReactive';
 import { set } from 'lodash';
 import { busy } from '@/mock/constants';
@@ -75,7 +75,6 @@ const SignUpForm = () => {
 
   const handleSubmit = async (vs: any) => {
     setIsPending(true);
-    await busy(2000);
     setData((_old) => {
       return { ..._old, ...vs };
     });
@@ -95,12 +94,10 @@ const SignUpForm = () => {
     UserActivityNS.setLogin();
     UserActivityNS.setAvatar(got.AvatarCode);
     UserActivityNS.setAccountId(got.AccountId);
-    router.push('/');
-
-    // console.log('got', got);
+    router.back();
   };
   const handleAvatar = (up: Uploadable) => {
-    // console.log(up);
+    console.log(up);
     setData((_old) => {
       return { ..._old, Avatar: { ...up } };
     });

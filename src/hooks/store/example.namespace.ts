@@ -2,10 +2,6 @@ import { create, useStore } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 
-const initialState: { bears: number } = {
-  bears: 0,
-};
-
 type State = {
   count: number[];
 };

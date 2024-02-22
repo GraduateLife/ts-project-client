@@ -1,55 +1,69 @@
-import ProductGrid from '@/components/productGist/productGrid';
-import ProductScrollAble from '@/components/productScrollable';
+import ProductGrid from '@/components/productGrid/productGrid';
 
 import Spacer from '@/theme/typography/spacer';
 import Title from '@/theme/typography/title';
 import EventCarousel from '@/components/eventCarousel';
-import { Product } from '@/models/product';
-import { ipsumUrl } from '@/mock/constants';
-
-type EVENTS = {
-  url: string;
-  link: string;
-};
+import { fetchEvents } from '@/fetchers/events';
+import { fetchProducts } from '@/fetchers/products';
+import Link from 'next/link';
+import { Button } from '@/theme/ui/button';
+import { Suspense } from 'react';
+import BaseGrid from '@/components/base/baseGrid';
+import ProductCard from '@/components/productGrid/productCard';
 
 export default async function Home() {
-  const eventRes = await fetch(process.env.BASE_URL + '/api/events');
-  if (!eventRes.ok) {
-    throw new Error('reach_failure');
-  }
-  const { code: eventCode, data: eventData } = await eventRes.json();
-  if (eventCode === 'fal') {
-    throw new Error('broken_data');
-  }
-  const gotEvents: EVENTS[] = Object.values(eventData);
-  // console.log(gotEvents[0].url);
-
-  const res = await fetch(process.env.BASE_URL + '/api/products');
-  if (!res.ok) {
-    throw new Error('reach_failure');
-  }
-  const { code, data } = await res.json();
-  if (code === 'fal') {
-    throw new Error('broken_data');
-  }
-  const gotProducts = Object.values(data) as Product[];
+  const gotEvents = await fetchEvents();
+  const gotProducts = await fetchProducts();
 
   return (
     <>
       <Title>latest events</Title>
-      <EventCarousel
-        imageUrls={gotEvents.map((item) => item.url)}
-        imagePermLinks={gotEvents.map((item) => item.link)}
-      />
-      <Spacer />
-
-      {/* <Title>Recommended for you</Title>
-      <ProductScrollAble data={_gist} /> */}
+      <EventCarousel data={gotEvents} />
 
       <Spacer />
 
-      <Title>Featured Products</Title>
-      <ProductGrid data={gotProducts} />
+      <div className="flex justify-between items-center">
+        <Title>top 10 products</Title>
+        <Button variant={'link'} asChild className="text-lg">
+          <Link prefetch href={'/products'}>
+            See all products
+          </Link>
+        </Button>
+      </div>
+
+      {/* <ProductGrid />
+       */}
+      <BaseGrid>
+        {gotProducts.data.map(
+          (
+            {
+              productId,
+              productImageUrls,
+              productCoverImageUrl,
+              productName,
+              productRate,
+              productSinglePrice,
+              productTags,
+              productCommented,
+            },
+            idx
+          ) => {
+            return (
+              <ProductCard
+                key={productId}
+                productId={productId}
+                productImageUrls={productImageUrls}
+                productCoverImageUrl={productCoverImageUrl}
+                productName={productName}
+                productRate={productRate}
+                productTags={productTags}
+                productCommented={productCommented}
+                productSinglePrice={productSinglePrice}
+              ></ProductCard>
+            );
+          }
+        )}
+      </BaseGrid>
       <Spacer />
     </>
   );

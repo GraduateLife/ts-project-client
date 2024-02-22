@@ -1,8 +1,8 @@
-import { uniqueFunc } from '@/lib/utils';
 import {
   CartItem,
   CartItemWithMeta,
   ChosenSpec,
+  IProductFilter,
   Product,
 } from '@/models/product';
 
@@ -18,17 +18,28 @@ type State = {
     likedItemIds: string[];
     archivedCartItems: CartItemWithMeta[];
     chosenSpecsOfItemIds: Record<string, ChosenSpec[]>;
+    selectedProductFilter: IProductFilter;
   };
 };
 
 type Actions = {
   like: (id: string) => void;
   unlike: (id: string) => void;
-  setLogin: () => void;
+  setLogin: (loginState: boolean) => void;
   setAccountId: (id: string) => void;
   setAvatar: (code: string) => void;
   addChosenSpecs: (id: string, chosen: ChosenSpec) => void;
   updateChosenSpecs: (id: string, chosen: ChosenSpec) => void;
+  updateProductFilter: (schema: IProductFilter) => void;
+  filterUnset: () => void;
+};
+
+const filterInitial = {
+  MinPrice: 1,
+  MaxPrice: 1000,
+  CommentCount: 0,
+  Rate: ['1', '2', '3', '4', '5'],
+  Keyword: undefined,
 };
 
 export const useUserActivity = create<State & Actions>()(
@@ -41,10 +52,16 @@ export const useUserActivity = create<State & Actions>()(
         likedItemIds: [],
         archivedCartItems: [],
         chosenSpecsOfItemIds: {},
+        selectedProductFilter: filterInitial,
       },
-      setLogin: () => {
+      filterUnset: () => {
         set((state) => {
-          state.recorded.isLoggedIn = true;
+          state.recorded.selectedProductFilter = filterInitial;
+        });
+      },
+      setLogin: (loginState = true) => {
+        set((state) => {
+          state.recorded.isLoggedIn = loginState;
         });
       },
       setAvatar: (code) => {
@@ -94,6 +111,14 @@ export const useUserActivity = create<State & Actions>()(
               item.specValue = chosenSpec.specValue;
             }
           });
+        });
+      },
+      updateProductFilter: (schema) => {
+        set((state) => {
+          for (const [_k, _v] of Object.entries(schema)) {
+            //@ts-ignore
+            state.recorded.selectedProductFilter[_k] = _v;
+          }
         });
       },
     })),

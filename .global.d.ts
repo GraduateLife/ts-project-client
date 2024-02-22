@@ -6,6 +6,8 @@ declare global {
       NODE_ENV: 'development' | 'production' | 'test';
       PORT?: string;
       PWD: string;
+      NEXT_PUBLIC_STRIPE_PUBLIC_KEY: string;
+      STRIPE_PRIVATE_KEY: string;
     }
   }
 }

@@ -1,13 +1,10 @@
-import BaseCarousel from '@/components/base/baseCarousel';
 import React, { Suspense } from 'react';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/theme/ui/tabs';
-import ProductDetailCard from '@/components/productDetail/productDetailCard';
-import { ipsumUrl } from '@/mock/constants';
+
 import ProductIntroduction from '@/components/productDetail/productIntroduction';
 import Spacer from '@/theme/typography/spacer';
 import CommentList from '@/components/commentList';
-import BaseImage from '@/components/base/baseImage';
 import { createOneProduct } from '@/mock/product.mock';
 import {
   GetServerSideProps,
@@ -16,27 +13,29 @@ import {
   ResolvingMetadata,
 } from 'next';
 import { Product } from '@/models/product';
-import { isNil } from 'lodash';
-import ProductCarousel from '@/components/productDetail/productCarousel';
 import ProductDetailDisplay from '@/components/productDetail/productDetailDisplay';
+import { _fetch } from '@/fetchers';
 
 type ProductDetailProps = {
-  currentProduct: Product;
   params: { id: string };
 };
 
 export async function generateMetadata({
   params,
 }: ProductDetailProps): Promise<Metadata> {
+  const res = await fetch(process.env.BASE_URL + '/api/products/' + params.id);
+  const { data } = await res.json();
   return {
-    title: outsideProduct.productName,
+    title: data.productName,
   };
 }
-let outsideProduct: Product;
 
-const ProductDetailPage = ({ params }: ProductDetailProps) => {
-  const thisProduct = createOneProduct(params.id);
-  outsideProduct = { ...thisProduct };
+const ProductDetailPage = async ({ params }: ProductDetailProps) => {
+  // const thisProduct = createOneProduct(params.id);
+
+  const res = await fetch(process.env.BASE_URL + '/api/products/' + params.id);
+  const { data } = await res.json();
+
   const {
     productId,
     productImageUrls,
@@ -46,27 +45,10 @@ const ProductDetailPage = ({ params }: ProductDetailProps) => {
     productSinglePrice,
     productSpecs,
     productTags,
-    productViewed,
-  } = thisProduct;
+    productCommented,
+  } = data;
   return (
     <>
-      {/* <div className="flex flex-row justify-between items-start min-h-[700px] py-[20px]">
-        <div className="w-[40%] h-full my-[20px]">
-          <ProductCarousel urls={productImageUrls}></ProductCarousel>
-        </div>
-
-        <div className="w-[60%] mx-[10%]">
-          <ProductDetailCard
-            productId={productId}
-            productName={productName}
-            productSinglePrice={productSinglePrice}
-            productRate={productRate}
-            productTags={productTags}
-            productViewed={productViewed}
-            productSpecs={productSpecs}
-          />
-        </div>
-      </div> */}
       <ProductDetailDisplay
         productId={productId}
         productImageUrls={productImageUrls}
@@ -74,7 +56,7 @@ const ProductDetailPage = ({ params }: ProductDetailProps) => {
         productName={productName}
         productRate={productRate}
         productTags={productTags}
-        productViewed={productViewed}
+        productCommented={productCommented}
         productSinglePrice={productSinglePrice}
         productSpecs={productSpecs}
       />

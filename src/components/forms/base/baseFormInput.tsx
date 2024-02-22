@@ -6,12 +6,19 @@ import {
   FormLabel,
   FormMessage,
 } from '@/theme/ui/form';
-import { Input } from '@/theme/ui/input';
-import React, { HTMLInputTypeAttribute } from 'react';
-import { UseFormReturn } from 'react-hook-form';
+import { Input, InputProps } from '@/theme/ui/input';
+import React, {
+  ChangeEvent,
+  ChangeEventHandler,
+  HTMLInputTypeAttribute,
+  forwardRef,
+} from 'react';
+import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 
-type FormInputProp = {
+export type FormInputProp = {
   upperController: UseFormReturn<any, any, undefined>;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  className?: string;
   inputName: string;
   inputLabel: string;
   inputType: HTMLInputTypeAttribute;
@@ -20,8 +27,12 @@ type FormInputProp = {
   test_value?: string;
 };
 
-const BaseFormInput = ({
+export type IFormInput = (data: FormInputProp) => JSX.Element;
+
+const BaseFormInput: IFormInput = ({
   upperController,
+  onChange = undefined,
+  className = '',
   inputName,
   inputLabel,
   inputType,
@@ -29,23 +40,26 @@ const BaseFormInput = ({
   inputDescription,
   test_value,
 }: FormInputProp) => {
+  const handleOnChange = (
+    field: ControllerRenderProps<any, string>,
+    e: ChangeEvent<HTMLInputElement>
+  ) => {
+    onChange?.(e);
+    field.onChange(e);
+  };
   return (
     <FormField
       control={upperController.control}
       name={inputName}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className={className}>
           <FormLabel>{inputLabel}</FormLabel>
           <FormControl>
             <Input
               type={inputType}
               placeholder={inputPlaceholder}
               {...field}
-              value={
-                process.env.NODE_ENV === 'development' && test_value
-                  ? test_value
-                  : undefined
-              }
+              onChange={handleOnChange.bind(this, field)}
               className="w-full"
             />
           </FormControl>

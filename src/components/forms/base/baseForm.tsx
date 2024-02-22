@@ -1,6 +1,6 @@
 import { Form } from '@/theme/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { Children, ReactNode, useMemo } from 'react';
+import React, { Fragment, ReactNode, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as z from 'zod';
 import BaseFormInput from './baseFormInput';
@@ -14,14 +14,15 @@ type BaseFormProps = {
   placeholders?: Record<string, string>;
   types?: Record<string, string>;
   descriptions: Record<string, string>;
-  //   submitAction: any;
   submitHandler: SubmitHandler<any>;
   isSubmittingController: boolean;
   test_values?: Record<string, string>;
   children?: ReactNode;
 };
 
-const BaseForm = ({
+export type IFrom = (data: BaseFormProps) => JSX.Element;
+
+const BaseForm: IFrom = ({
   formSchema,
   defaultValues,
   placeholders = {},
@@ -32,7 +33,7 @@ const BaseForm = ({
   test_values = {},
   isSubmittingController,
   submitHandler,
-}: BaseFormProps) => {
+}) => {
   const shouldBeDefaultValues =
     process.env.NODE_ENV !== 'development'
       ? defaultValues
@@ -41,7 +42,7 @@ const BaseForm = ({
     resolver: zodResolver(formSchema),
     defaultValues: shouldBeDefaultValues,
   });
-  const fieldNames = useMemo(() => Object.keys(defaultValues), []);
+  const fieldNames = useMemo(() => Object.keys(defaultValues), [defaultValues]);
 
   return (
     <>
@@ -52,16 +53,17 @@ const BaseForm = ({
         >
           {fieldNames.map((item) => {
             return (
-              <BaseFormInput
-                key={item}
-                upperController={formController}
-                inputLabel={labels[item] ?? item}
-                inputPlaceholder={placeholders[item] ?? ''}
-                inputDescription={descriptions[item] ?? ''}
-                inputName={item}
-                inputType={types[item] ?? 'text'}
-                test_value={test_values[item] ?? undefined}
-              ></BaseFormInput>
+              <Fragment key={item}>
+                <BaseFormInput
+                  upperController={formController}
+                  inputLabel={labels[item] ?? item}
+                  inputPlaceholder={placeholders[item] ?? ''}
+                  inputDescription={descriptions[item] ?? ''}
+                  inputName={item}
+                  inputType={types[item] ?? 'text'}
+                  test_value={test_values[item] ?? undefined}
+                ></BaseFormInput>
+              </Fragment>
             );
           })}
           {children}

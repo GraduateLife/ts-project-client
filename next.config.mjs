@@ -5,10 +5,14 @@ const nextConfig = {
   reactStrictMode: true,
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
-    domains:
-      process.env.NODE_ENV === 'development'
-        ? ['picsum.photos', 'images.unsplash.com', 'fastly.picsum.photos']
-        : [],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'picsum.photos',
+      },
+    ],
+
+    // domains: ['picsum.photos', 'images.unsplash.com', 'fastly.picsum.photos'],
   },
 };
 

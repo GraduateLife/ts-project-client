@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useMemo } from 'react';
-import BaseImage from './base/baseImage';
-import { ipsumUrl } from '@/mock/constants';
+import BaseImage from '../base/baseImage';
+import { picsumUrl } from '@/mock/constants';
 import Words from '@/theme/typography/words';
 import {
   Check,
@@ -12,7 +12,6 @@ import {
   X,
 } from 'lucide-react';
 import { Separator } from '@/theme/ui/separator';
-import { useCountStore } from '@/hooks/store/bear.namespace';
 import { useStore } from 'zustand';
 import { Button } from '@/theme/ui/button';
 import { useCartListStore } from '@/hooks/store/namespaces/cartList';
@@ -22,6 +21,7 @@ import {
   ChosenSpec,
   createCartItemUniqueKey,
 } from '@/models/product';
+import { useRouter } from 'next/navigation';
 
 type ShoppingCartLiProp = {
   productImageUrl: string;
@@ -45,6 +45,11 @@ const ShoppingCartLi = ({
     () => createCartItemUniqueKey({ productId, productChosenSpec }),
     [productChosenSpec, productId]
   );
+  const router = useRouter();
+
+  const handleNavigate = () => {
+    router.push('/products/' + productId);
+  };
 
   const handleRemove = useCallback(() => {
     CartListNS.remove(thisCartItemUniqueKey);
@@ -79,11 +84,16 @@ const ShoppingCartLi = ({
     <>
       <div className="flex items-center justify-evenly relative">
         <div className="min-h-[3.125rem] min-w-[3.125rem] relative">
-          <BaseImage src={productImageUrl} alt={productName}></BaseImage>
+          <BaseImage
+            src={productImageUrl}
+            alt={productName}
+            width={50}
+            height={50}
+          ></BaseImage>
         </div>
         <div className="pl-2 max-w-[300px]">
-          <div className="max-h-[50px]">
-            <Words className="inline-block text-ellipsis overflow-hidden">
+          <div className="max-h-[50px]" onClick={handleNavigate}>
+            <Words className="inline-block text-ellipsis overflow-hidden cursor-pointer">
               {productName.substring(0, 10)}
               {'... '}
               <X className="inline-block h-3 w-3"></X>
@@ -94,7 +104,10 @@ const ShoppingCartLi = ({
           <div className="flex flex-wrap text-sky-700">
             {productChosenSpec.map((item, idx) => {
               return (
-                <div key={idx} className="px-2 truncate">
+                <div
+                  key={item.specValue + item.specName}
+                  className="px-2 truncate"
+                >
                   <span className="hover:underline hover:decoration-sky-500/30 text-ellipsis overflow-hidden ">
                     {item.specName} : {item.specValue}
                   </span>
@@ -142,10 +155,9 @@ const ShoppingCartList = () => {
     <ul className="py-2">
       {CartListNS.cartItems.map((item, idx) => {
         return (
-          <>
+          <Fragment key={item.uniqueKey}>
             <Separator />
             <ShoppingCartLi
-              key={createCartItemUniqueKey(item)}
               productId={item.productId}
               productImageUrl={item.productCoverImageUrl}
               productName={item.productName}
@@ -154,7 +166,7 @@ const ShoppingCartList = () => {
               productChosenSpec={item.productChosenSpec}
             />
             {idx === CartListNS.cartItems.length - 1 ? <Separator /> : null}
-          </>
+          </Fragment>
         );
       })}
     </ul>

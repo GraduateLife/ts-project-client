@@ -16,7 +16,7 @@ const initialState = {
   productName: '',
   productRate: 0,
   productTags: [] as string[],
-  productViewed: 0,
+  productCommented: 0,
   productSinglePrice: 0,
   productSpecs: [],
 };

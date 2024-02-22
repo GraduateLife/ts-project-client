@@ -16,6 +16,7 @@ type Actions = {
   add: (p: Product, s: ChosenSpec[], amount: number) => void;
   remove: (uniqueKey: string) => void;
   updateByKey: (key: string, cb: (c: CartItem) => void) => void;
+  unset: () => void;
 };
 
 const initialState: CartItemWithMeta[] = [];
@@ -47,6 +48,11 @@ export const useCartListStore = create<State & Actions>()(
        * @remark if list has this product, update it
        * @remark if list does not have this product,append
        */
+      unset: () => {
+        set((state) => {
+          state.cartItems = initialState;
+        });
+      },
       addOrUpdate: (
         productToAdd: Product,
         withSpecs: ChosenSpec[],

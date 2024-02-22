@@ -3,7 +3,6 @@
 import React, { useEffect } from 'react';
 import BaseCarousel from '../base/baseCarousel';
 import BaseImage from '../base/baseImage';
-import useLocalStorage from '@/hooks/useLocalStorage';
 
 const ProductCarousel = ({ urls }: { urls: string[] }) => {
   return (
@@ -13,7 +12,15 @@ const ProductCarousel = ({ urls }: { urls: string[] }) => {
       autoPlay={false}
     >
       {urls.map((item, idx) => {
-        return <BaseImage key={idx} src={item}></BaseImage>;
+        return (
+          <BaseImage
+            key={idx}
+            src={item}
+            alt={item}
+            width={600}
+            height={600}
+          ></BaseImage>
+        );
       })}
     </BaseCarousel>
   );

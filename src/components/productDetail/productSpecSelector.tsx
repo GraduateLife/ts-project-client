@@ -64,6 +64,7 @@ const ProductSpecSelector = ({
           return (
             <Fragment key={idx}>
               <ToggleGroupItem
+                className="dark:bg-white dark:text-black"
                 value={item.toString()}
                 aria-label={`Choose ${item.toString()}`}
                 onClick={handleClick}

@@ -15,7 +15,7 @@ const ProductDetailDisplay = ({
   productSinglePrice,
   productSpecs,
   productTags,
-  productViewed,
+  productCommented,
 }: Product) => {
   const CurrentProductNS = useStore(useCurrentProduct);
   useEffect(() => {
@@ -26,7 +26,7 @@ const ProductDetailDisplay = ({
       productName,
       productRate,
       productTags,
-      productViewed,
+      productCommented,
       productSinglePrice,
       productSpecs,
     });
@@ -46,7 +46,7 @@ const ProductDetailDisplay = ({
           productSinglePrice={productSinglePrice}
           productRate={productRate}
           productTags={productTags}
-          productViewed={productViewed}
+          productCommented={productCommented}
           productSpecs={productSpecs}
         />
       </div>

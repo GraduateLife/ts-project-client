@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from 'clsx';
+import { addDays, addWeeks } from 'date-fns';
 import { twMerge } from 'tailwind-merge';
 
 /**
@@ -8,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function uniqueFunc<T extends Record<string, any>>(
+function uniqueFunc<T extends Record<string, any>>(
   arr: T[],
   primaryKey: keyof T
 ) {
@@ -17,3 +18,8 @@ export function uniqueFunc<T extends Record<string, any>>(
     (item) => !res.has(item[primaryKey]) && res.set(item[primaryKey], 1)
   );
 }
+
+//time
+export const today = new Date();
+export const tmr = addDays(today, 1);
+export const futureWeeks = (weeks: number) => addWeeks(today, weeks);

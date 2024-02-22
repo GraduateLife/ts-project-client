@@ -4,8 +4,9 @@ import { Button } from '@/theme/ui/button';
 import { Input } from '@/theme/ui/input';
 
 import React, { useRef, useState } from 'react';
-import BaseImage from './baseImage';
+import BaseImage from '../../base/baseImage';
 import { Label } from '@/theme/ui/label';
+import { FormDescription } from '@/theme/ui/form';
 
 export type Uploadable = {
   title: string;
@@ -88,6 +89,9 @@ const BaseFileUploader = ({ submitHandler }: BaseFileUploaderProp) => {
             Do it later
           </Button>
         </div>
+        <FormDescription>
+          {'click "Use it" after you selected your avatar'}
+        </FormDescription>
       </div>
 
       <div className="h-[200px] mt-3 border-dashed border flex justify-center items-center bg-slate-100 rounded-sm">
@@ -101,6 +105,9 @@ const BaseFileUploader = ({ submitHandler }: BaseFileUploaderProp) => {
                   <BaseImage
                     src={item.fullCode}
                     className="rounded-full"
+                    alt={item.title}
+                    width={150}
+                    height={150}
                   ></BaseImage>
                 </div>
               );

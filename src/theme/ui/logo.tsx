@@ -2,9 +2,10 @@ import React from 'react';
 
 type LogoProps = {
   iconSize: string;
+  className?: string;
 } & React.SVGProps<SVGSVGElement>;
 
-const Logo = ({ iconSize, ...rest }: LogoProps) => {
+const Logo = ({ iconSize, className, ...rest }: LogoProps) => {
   return (
     <svg
       width={iconSize}
@@ -12,6 +13,7 @@ const Logo = ({ iconSize, ...rest }: LogoProps) => {
       viewBox="0 0 1024 1024"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
+      className={className}
       {...rest}
     >
       <path

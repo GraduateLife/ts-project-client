@@ -1,12 +1,13 @@
 import { cn } from '@/lib/utils';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
 type X = {
-  animate?: boolean;
+  animate?: string;
   position: string;
   baseColor?: string;
   shimColor?: string;
   size?: number;
+  children?: ReactNode;
 };
 
 const Dot = ({ position, animate, size = 3, baseColor, shimColor }: X) => {
@@ -20,6 +21,7 @@ const Dot = ({ position, animate, size = 3, baseColor, shimColor }: X) => {
             shimColor ?? 'bg-orange-400'
           )}
         ></span>
+
         <span
           className={cn(
             `relative inline-flex rounded-full h-${size} w-${size} `,

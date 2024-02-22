@@ -8,7 +8,7 @@ const TopSlogan = () => {
     <div
       className={`${
         show ? 'block' : 'hidden'
-      } flex bg-slate-600 justify-between px-4 py-1`}
+      } flex bg-orange-700 justify-between px-4 py-1`}
     >
       <div className=" text-center text-white font-bold mx-auto">
         Free shipping is available!

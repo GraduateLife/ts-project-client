@@ -33,7 +33,7 @@ type ProductDetailCardProp = {
   productName: string;
   productRate: number;
   productTags: string[];
-  productViewed: number;
+  productCommented: number;
   productSinglePrice: number;
   productSpecs: SpecChoices[];
 };
@@ -42,11 +42,15 @@ const ProductHeader = ({
   productName,
   productId,
   productRate,
-  productViewed,
+  productCommented,
   productTags,
 }: Pick<
   ProductDetailCardProp,
-  'productName' | 'productId' | 'productRate' | 'productViewed' | 'productTags'
+  | 'productName'
+  | 'productId'
+  | 'productRate'
+  | 'productCommented'
+  | 'productTags'
 >) => {
   const UserActivityNS = useStore(useUserActivity);
   const [heartIsFilled, setHeartIsFilled] = useState(false);
@@ -71,8 +75,12 @@ const ProductHeader = ({
     }
   };
 
-  const handleShare = () => {
-    alert(window.location.href);
+  const handleShare = async () => {
+    if (navigator.clipboard) {
+      await navigator?.clipboard?.writeText(window.location.href);
+    } else {
+      alert('Sorry, cannot use your clipboard');
+    }
   };
   return (
     <>
@@ -98,11 +106,7 @@ const ProductHeader = ({
       <div className="flex flex-wrap">
         {productTags.map((item, idx) => {
           return (
-            <Badge
-              variant={'tag'}
-              className="mx-1 my-1 bg-green-600 hover:bg-green-700"
-              key={idx}
-            >
+            <Badge variant={'tag'} key={idx}>
               {item}
             </Badge>
           );
@@ -112,7 +116,7 @@ const ProductHeader = ({
       <Title className="select-all my-0">{productName}</Title>
 
       <CardDescription>
-        rate: {productRate}/5 ({productViewed})
+        rate: {productRate}/5 ({productCommented})
       </CardDescription>
     </>
   );
@@ -123,7 +127,7 @@ const ProductDetailCard = ({
   productName,
   productSinglePrice,
   productRate,
-  productViewed,
+  productCommented,
   productSpecs,
   productTags,
 }: ProductDetailCardProp) => {
@@ -153,12 +157,30 @@ const ProductDetailCard = ({
   };
 
   const handleAddCart = () => {
+    if (!UserActivityNS.recorded.isLoggedIn) {
+      alert('must login');
+      router.push('/login');
+      return;
+    }
+    //have not chosen specs
+    if (
+      !UserActivityNS.recorded.chosenSpecsOfItemIds[
+        CurrentProductNS.currentProduct.productId
+      ]
+    ) {
+      alert('must choose specs');
+      return;
+    }
+
+    //cart list has this product
     if (
       listHasThisProduct(
         CartListStoreNS.cartItems,
         CurrentProductNS.currentProduct
       )
     ) {
+      //this is the same product with different specs
+      //will push into cart list
       if (
         transformChosenSpecsToString(
           UserActivityNS.recorded.chosenSpecsOfItemIds[
@@ -180,6 +202,7 @@ const ProductDetailCard = ({
           amount
         );
       }
+      //this is a new product
     } else {
       CartListStoreNS.addOrUpdate(
         { ...CurrentProductNS.currentProduct },
@@ -197,7 +220,7 @@ const ProductDetailCard = ({
         productName={productName}
         productId={productId}
         productRate={productRate}
-        productViewed={productViewed}
+        productCommented={productCommented}
         productTags={productTags}
       ></ProductHeader>
 
