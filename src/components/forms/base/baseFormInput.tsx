@@ -16,7 +16,7 @@ import React, {
 import { ControllerRenderProps, UseFormReturn } from 'react-hook-form';
 
 export type FormInputProp = {
-  upperController: UseFormReturn<any, any, undefined>;
+  upperController: UseFormReturn<any, any, any>;
   onChange?: ChangeEventHandler<HTMLInputElement>;
   className?: string;
   inputName: string;

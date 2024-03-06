@@ -16,7 +16,7 @@ export type CheckBoxChoice = {
 };
 
 type BaseCheckboxGroupProp = {
-  upperController: UseFormReturn<any, any, undefined>;
+  upperController: UseFormReturn<any, any, any>;
   inputName: string;
   inputLabel: string;
   inputDescription: string;

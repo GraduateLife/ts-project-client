@@ -30,12 +30,14 @@ const BaseFileUploader = ({ submitHandler }: BaseFileUploaderProp) => {
       'load',
       () => {
         const image = new Image();
+        //@ts-ignore
         image.title = file.name;
         image.src = reader.result as string;
         setBase64Codes((_old) => {
           const code = image.src.split(',')[1];
 
           _old[0] = {
+            //@ts-ignore
             title: file.name,
             mimetype: file.type,
             sizeByte: file.size,
