@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "serve": "pnpm run build && pnpm run start"
+    "serve": "npm run build && npm run start"
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",

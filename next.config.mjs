@@ -2,6 +2,7 @@ import remarkGfm from 'remark-gfm';
 import createMDX from '@next/mdx';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   reactStrictMode: true,
   pageExtensions: ['js', 'jsx', 'mdx', 'ts', 'tsx'],
   images: {
@@ -11,8 +12,6 @@ const nextConfig = {
         hostname: 'picsum.photos',
       },
     ],
-
-    // domains: ['picsum.photos', 'images.unsplash.com', 'fastly.picsum.photos'],
   },
 };
 

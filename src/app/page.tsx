@@ -11,6 +11,8 @@ import { Suspense } from 'react';
 import BaseGrid from '@/components/base/baseGrid';
 import ProductCard from '@/components/productGrid/productCard';
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const gotEvents = await fetchEvents();
   const gotProducts = await fetchProducts();

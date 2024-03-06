@@ -7,8 +7,8 @@ export const _fetch = async <T>(
     console.log('do not try to add api root path on your own');
     throw new Error('fatal!');
   }
-  if (process.env.BASE_URL) {
-    url = process.env.BASE_URL + url;
+  if (process.env.NEXT_PUBLIC_BASE_URL) {
+    url = process.env.NEXT_PUBLIC_BASE_URL + url;
   }
 
   if (paginationOption) {

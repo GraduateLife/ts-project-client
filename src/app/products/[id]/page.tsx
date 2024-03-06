@@ -22,7 +22,9 @@ type ProductDetailProps = {
 export async function generateMetadata({
   params,
 }: ProductDetailProps): Promise<Metadata> {
-  const res = await fetch(process.env.BASE_URL + '/api/products/' + params.id);
+  const res = await fetch(
+    process.env.NEXT_PUBLIC_BASE_URL + '/api/products/' + params.id
+  );
   const { data } = await res.json();
   return {
     title: data.productName,
@@ -32,7 +34,9 @@ export async function generateMetadata({
 const ProductDetailPage = async ({ params }: ProductDetailProps) => {
   // const thisProduct = createOneProduct(params.id);
 
-  const res = await fetch(process.env.BASE_URL + '/api/products/' + params.id);
+  const res = await fetch(
+    process.env.NEXT_PUBLIC_BASE_URL + '/api/products/' + params.id
+  );
   const { data } = await res.json();
 
   const {

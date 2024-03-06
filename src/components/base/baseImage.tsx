@@ -1,5 +1,10 @@
 'use client';
-import React, { ImgHTMLAttributes, useLayoutEffect, useState } from 'react';
+import React, {
+  ComponentProps,
+  ImgHTMLAttributes,
+  useLayoutEffect,
+  useState,
+} from 'react';
 import NextImage from 'next/image';
 import { cn } from '@/lib/utils';
 import { useReactive } from '@/hooks/useReactive';
@@ -30,6 +35,10 @@ type FetchController = {
   className: string;
 };
 
+const ImageElement = ({ ...props }: ComponentProps<'img'>) => {
+  return <img {...props}></img>;
+};
+
 const BaseImage = ({ src, width, height, alt, className }: ImageProps) => {
   const [requestUrl, setRequestUrl] = useState(src);
   const [fetchController, setOnFetchController] = useState<
@@ -42,28 +51,32 @@ const BaseImage = ({ src, width, height, alt, className }: ImageProps) => {
   });
 
   const handleloadError = () => {
+    try {
+      setOnFetchController({
+        height,
+        width,
+        // fill: true,
+        className: 'object-contain',
+      });
+      setRequestUrl(`/error.png`);
+      return;
+    } catch (e) {
+      return;
+    }
     // setOnErrorClassName('object-contain');
-    setOnFetchController({
-      height,
-      width,
-      // fill: true,
-      className: 'object-contain',
-    });
-    setRequestUrl(`/error.png`);
-    return;
   };
 
   return (
-    <NextImage
+    <ImageElement
       src={requestUrl}
       alt={alt}
-      fill={fetchController.fill}
+      // fill={fetchController.fill}
       width={fetchController.width}
       height={fetchController.height}
       sizes="100vw"
       className={cn('object-cover', className, fetchController.className)}
       loading="lazy"
-      placeholder={`data:image/png;base64,${placeholderImageBase64Code}`}
+      // placeholder={`data:image/png;base64,${placeholderImageBase64Code}`}
       onError={handleloadError}
     />
   );
